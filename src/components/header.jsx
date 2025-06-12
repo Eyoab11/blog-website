@@ -1,13 +1,16 @@
 import { motion } from "framer-motion";
-import { useEffect } from "react";
-import Eyoab from "../assets/Eyoab-removebg-preview.png"
-const Header = () => {
+import { useEffect, useState } from "react";
+import Eyoab from "../assets/Eyoab-removebg-preview.png";
+import { FaSun, FaMoon } from 'react-icons/fa';
+
+const Header = ({ darkMode, setDarkMode }) => {
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
     return () => {
       document.documentElement.style.scrollBehavior = "auto";
     };
   }, []);
+
 
   const container = {
     hidden: { opacity: 0 },
@@ -25,20 +28,32 @@ const Header = () => {
     show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
-  return (
+   return (
     <motion.header
       initial="hidden"
       animate="show"
       variants={container}
-      className="relative flex flex-col items-center justify-center p-8 bg-black text-white font-serif min-h-screen"
+      className={`relative flex flex-col items-center justify-center p-8 ${darkMode ? 'bg-black text-white' : 'bg-white text-black'} font-serif min-h-screen transition-colors duration-300`}
     >
-      {/* Your photo with Lao Tzu styling */}
+      {/* Dark/Light Mode Toggle - Top right corner */}
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        className="absolute top-6 right-6 p-2 rounded-full focus:outline-none z-50"
+      >
+        {darkMode ? (
+          <FaSun className="text-yellow-400 text-xl hover:scale-110 transition-transform" />
+        ) : (
+          <FaMoon className="text-gray-700 text-xl hover:scale-110 transition-transform" />
+        )}
+      </button>
+
+      {/* Your photo with dynamic border color */}
       <motion.div 
         variants={item}
-        className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-yellow-400 mb-6"
+        className={`w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 ${darkMode ? 'border-yellow-400' : 'border-indigo-600'} mb-6`}
       >
         <img 
-          src= {Eyoab} // Replace with your image path
+          src={Eyoab}
           alt="Eyoab Amare"
           className="w-full h-full object-cover"
         />
@@ -51,7 +66,7 @@ const Header = () => {
         WISDOM
       </motion.h1>
       <motion.h1 variants={item} className="text-4xl md:text-6xl font-bold tracking-wider mb-6">
-        OF<span className="text-yellow-400">CODE</span>
+        OF<span className={darkMode ? 'text-yellow-400' : 'text-indigo-600'}>CODE</span>
       </motion.h1>
       
       <motion.p variants={item} className="text-lg md:text-xl italic mb-4 text-center max-w-md">
@@ -62,7 +77,7 @@ const Header = () => {
         <p>Written by Eyoab Amare</p>
       </motion.div>
 
-      {/* Animated scroll indicator */}
+      {/* Animated scroll indicator with dynamic color */}
       <motion.div
         initial={{ opacity: 0, y: 0 }}
         animate={{ 
@@ -77,7 +92,7 @@ const Header = () => {
         className="mt-16"
       >
         <svg
-          className="w-6 h-6 text-yellow-400"
+          className={`w-6 h-6 ${darkMode ? 'text-yellow-400' : 'text-indigo-600'}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
