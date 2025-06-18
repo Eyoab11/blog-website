@@ -1,15 +1,10 @@
-import React, { useState } from 'react'
-import Header from './components/header'
-import NavBar from './components/navbar'
+import Home from './pages/Home'
 
 const App = () => {
-  const [darkMode, setDarkMode] = useState(false)
-
   return (
-    <div className={darkMode ? 'dark' : ''}>
-      <NavBar darkMode={darkMode} />
-      <Header darkMode={darkMode} setDarkMode={setDarkMode} />
-    </div>
+    <>
+    <Home />
+    </>
   )
 }
 
