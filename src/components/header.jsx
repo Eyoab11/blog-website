@@ -1,17 +1,30 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import Eyoab from "../assets/Eyoab-removebg-preview.png";
-import { FaSun, FaMoon } from 'react-icons/fa';
 
-const Header = ({ darkMode, setDarkMode }) => {
-  useEffect(() => {
-    document.documentElement.style.scrollBehavior = "smooth";
-    return () => {
-      document.documentElement.style.scrollBehavior = "auto";
-    };
-  }, []);
+const floatingVariants = {
+  animate: {
+    y: [0, -10, 0],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      repeatType: 'reverse',
+      ease: 'easeInOut',
+    },
+  },
+};
 
+const shimmerVariants = {
+  initial: { backgroundPosition: '200% 0' },
+  animate: {
+    backgroundPosition: ['200% 0', '-200% 0'],
+    transition: {
+      duration: 2.5,
+      repeat: Infinity,
+      ease: 'linear',
+    },
+  },
+};
 
+const Header = () => {
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -24,87 +37,95 @@ const Header = ({ darkMode, setDarkMode }) => {
   };
 
   const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+    hidden: { opacity: 0, y: 40 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, type: 'spring', bounce: 0.3 } },
   };
 
-   return (
+  // Split the title for floating animation
+  const title = 'THE EYOAB GAZETTE';
+  const titleLetters = title.split('');
+
+  return (
     <motion.header
       initial="hidden"
       animate="show"
       variants={container}
-      className={`relative flex flex-col items-center justify-center p-8 ${darkMode ? 'bg-black text-white' : 'bg-white text-black'} font-serif min-h-screen transition-colors duration-300`}
+      className="relative flex flex-col items-center justify-center w-full min-h-screen h-[100dvh] bg-[#f5ecd9] border-b-8 border-black overflow-hidden"
+      style={{ fontFamily: 'EB Garamond, serif' }}
     >
-      {/* Dark/Light Mode Toggle - Top right corner */}
-      <button
-        onClick={() => setDarkMode(!darkMode)}
-        className="absolute top-6 right-6 p-2 rounded-full focus:outline-none z-50"
-      >
-        {darkMode ? (
-          <FaSun className="text-yellow-400 text-xl hover:scale-110 transition-transform" />
-        ) : (
-          <FaMoon className="text-gray-700 text-xl hover:scale-110 transition-transform" />
-        )}
-      </button>
-
-      {/* Your photo with dynamic border color */}
-      <motion.div 
+      {/* Floating Letters */}
+      <motion.h1
         variants={item}
-        className={`w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 ${darkMode ? 'border-yellow-400' : 'border-indigo-600'} mb-6`}
+        className="text-6xl md:text-8xl font-extrabold tracking-widest mb-2 uppercase text-center leading-tight flex flex-wrap justify-center"
+        style={{ letterSpacing: '0.12em', zIndex: 2 }}
       >
-        <img 
-          src={Eyoab}
-          alt="Eyoab Amare"
-          className="w-full h-full object-cover"
-        />
-      </motion.div>
-
-      <motion.h1 variants={item} className="text-4xl md:text-6xl font-bold tracking-widest mb-2">
-        THE
+        {titleLetters.map((char, i) =>
+          char === ' ' ? (
+            <span key={i} style={{ width: '0.5em' }}></span>
+          ) : (
+            <motion.span
+              key={i}
+              variants={floatingVariants}
+              animate="animate"
+              style={{ display: 'inline-block', margin: '0 0.02em' }}
+              transition={{ delay: i * 0.06 }}
+            >
+              {char}
+            </motion.span>
+          )
+        )}
       </motion.h1>
-      <motion.h1 variants={item} className="text-4xl md:text-6xl font-bold tracking-widest mb-2">
-        WISDOM
-      </motion.h1>
-      <motion.h1 variants={item} className="text-4xl md:text-6xl font-bold tracking-wider mb-6">
-        OF<span className={darkMode ? 'text-yellow-400' : 'text-indigo-600'}>CODE</span>
-      </motion.h1>
-      
-      <motion.p variants={item} className="text-lg md:text-xl italic mb-4 text-center max-w-md">
-        Ancient Principles for Modern Programming
-      </motion.p>
-      
-      <motion.div variants={item} className="text-sm text-center">
-        <p>Written by Eyoab Amare</p>
-      </motion.div>
-
-      {/* Animated scroll indicator with dynamic color */}
-      <motion.div
-        initial={{ opacity: 0, y: 0 }}
-        animate={{ 
-          opacity: [0, 1, 0],
-          y: [0, 10, 20],
-        }}
-        transition={{
-          repeat: Infinity,
-          duration: 2,
-          ease: "easeInOut",
-        }}
-        className="mt-16"
+      {/* Subtitle shimmer */}
+      <motion.p
+        variants={item}
+        className="text-2xl md:text-3xl italic mb-2 text-center max-w-2xl mt-2 relative"
+        style={{ zIndex: 2 }}
       >
-        <svg
-          className={`w-6 h-6 ${darkMode ? 'text-yellow-400' : 'text-indigo-600'}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+        <motion.span
+          variants={shimmerVariants}
+          initial="initial"
+          animate="animate"
+          className="inline-block bg-gradient-to-r from-[#b59b6a] via-[#f5ecd9] to-[#b59b6a] bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer"
+          style={{ WebkitBackgroundClip: 'text', backgroundClip: 'text' }}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+          Ancient Principles for Modern Programming
+        </motion.span>
+      </motion.p>
+      <motion.div variants={item} className="text-lg text-center mb-2" style={{ zIndex: 2 }}>
+        <span className="tracking-widest">Est. 2024 &mdash; Vol. 1, No. 1</span>
+      </motion.div>
+      {/* Animated underline */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 1.2, delay: 1.2, type: 'spring', bounce: 0.2 }}
+        className="w-40 md:w-64 h-3 bg-black rounded-full mt-8 mb-2 origin-left shadow-lg"
+        style={{ zIndex: 2 }}
+      ></motion.div>
+      {/* Magical floating sparkles */}
+      <motion.div className="absolute inset-0 pointer-events-none z-0">
+        {[...Array(18)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 rounded-full bg-[#b59b6a] opacity-30 shadow-lg"
+            style={{
+              top: `${Math.random() * 90 + 2}%`,
+              left: `${Math.random() * 95 + 1}%`,
+              filter: 'blur(1.5px)',
+            }}
+            animate={{
+              y: [0, -10, 0],
+              opacity: [0.3, 0.7, 0.3],
+            }}
+            transition={{
+              duration: 2.5 + Math.random(),
+              repeat: Infinity,
+              delay: Math.random() * 2,
+              repeatType: 'reverse',
+              ease: 'easeInOut',
+            }}
           />
-        </svg>
+        ))}
       </motion.div>
     </motion.header>
   );

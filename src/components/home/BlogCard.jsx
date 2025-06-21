@@ -1,166 +1,147 @@
 import { useState } from 'react';
 import { motion } from "framer-motion";
-import { FaArrowRight, FaHeart, FaComment, FaBookmark, FaCheck } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+
+const sparkleVariants = {
+  animate: {
+    y: [0, -8, 0],
+    opacity: [0.5, 1, 0.5],
+    transition: {
+      duration: 2.2,
+      repeat: Infinity,
+      repeatType: 'reverse',
+      ease: 'easeInOut',
+    },
+  },
+};
+
+const tagColors = {
+  Philosophy: 'bg-[#f5ecd9] text-[#7c5e2a] border-[#e2d8c3]',
+  Technology: 'bg-[#e6f7fa] text-[#1e3a5c] border-[#b3e0ee]',
+  Music: 'bg-[#f0e7fa] text-[#6b21a8] border-[#d1b3ee]',
+  Humor: 'bg-[#fffbe9] text-[#b59b6a] border-[#e2d8c3]',
+  Design: 'bg-[#f9f6f2] text-[#3a2c13] border-[#e2d8c3]',
+  JavaScript: 'bg-[#fff7e6] text-[#eab308] border-[#f7e1b3]',
+  React: 'bg-[#e6f7fa] text-[#2563eb] border-[#b3e0ee]',
+  Wellness: 'bg-[#e6fae6] text-[#15803d] border-[#b3eeb3]',
+  Community: 'bg-[#f0f7fa] text-[#0e7490] border-[#b3dbee]',
+  All: 'bg-[#f5ecd9] text-[#7c5e2a] border-[#e2d8c3]'
+};
 
 export const BlogCard = ({ 
   title, 
   excerpt, 
   category, 
   date, 
-  darkMode,
+  tags = [],
+  imageUrl,
+  images,
   readTime = "5 min read",
   author = "Eyoab Amare",
-  imageUrl = "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-  authorImage = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+  authorImage = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+  id
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [rotate, setRotate] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = (y - centerY) / 20;
-    const rotateY = (centerX - x) / 20;
-    
-    setRotate({ x: rotateX, y: rotateY });
-  };
-
-  const handleMouseLeave = () => {
-    setRotate({ x: 0, y: 0 });
-  };
+  const galleryImages = images && images.length > 0 ? images : imageUrl ? [imageUrl] : [];
+  const [galleryIndex, setGalleryIndex] = useState(0);
 
   const handleCardClick = (e) => {
-    // Don't flip if click originated from the "See More" button
     if (!e.target.closest('.no-flip')) {
       setIsFlipped(!isFlipped);
     }
   };
 
   return (
-    <div 
-      className="w-full max-w-[380px] h-[500px] perspective-1500 mx-auto cursor-pointer"
+    <motion.div 
+      className="w-full max-w-3xl min-h-[340px] mx-auto cursor-pointer paper-shadow blog-card-parchment transition-transform duration-300 hover:scale-[1.035] hover:shadow-2xl flex flex-col relative overflow-hidden"
       onClick={handleCardClick}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        transform: `perspective(1500px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
-        transition: "transform 0.5s ease"
-      }}
+      style={{ fontFamily: 'EB Garamond, Merriweather, serif' }}
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, type: 'spring', bounce: 0.25 }}
+      whileHover={{ boxShadow: '0 0 0 4px #b59b6a, 0 8px 32px 0 rgba(181,155,106,0.10)' }}
     >
+      {/* Magical Sparkle */}
       <motion.div
-        className="relative w-full h-full"
-        initial={false}
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        {/* Front of Card */}
-        <div className={`absolute w-full h-full backface-hidden rounded-3xl overflow-hidden ${darkMode ? 'shadow-2xl shadow-gray-800' : 'shadow-2xl shadow-gray-200'}`}>
-          {/* Decorative Elements */}
-          <div className="absolute top-6 right-6 w-12 h-12 bg-yellow-400 rounded-full animate-pulse z-10"></div>
-          <div className="absolute bottom-10 left-6 w-16 h-16 bg-purple-400 rounded-full z-10"></div>
-          
-          {/* Image Background */}
-          <div className={`absolute inset-0 ${darkMode ? 'bg-gradient-to-r from-indigo-900/40 to-purple-900/40' : 'bg-gradient-to-r from-indigo-500/20 to-purple-600/20'}`}></div>
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${imageUrl})` }}
-          ></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-0"></div>
-          
-          {/* Content */}
-          <div className="absolute bottom-0 w-full p-8 text-white z-10">
-            <div className="flex gap-2 mb-4">
-              <span className={`${darkMode ? 'bg-indigo-600/80 hover:bg-indigo-600' : 'bg-indigo-500/80 hover:bg-indigo-500'} text-white px-3 py-1 rounded-full text-sm font-medium transition-colors`}>
-                {category}
-              </span>
-              <span className={`${darkMode ? 'bg-purple-600/80 hover:bg-purple-600' : 'bg-purple-500/80 hover:bg-purple-500'} text-white px-3 py-1 rounded-full text-sm font-medium transition-colors`}>
-                Tutorial
-              </span>
-            </div>
-            
-            <h2 className="text-2xl font-bold mb-3">{title}</h2>
-            
-            <p className="text-white/90 mb-6">{excerpt}</p>
-            
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <div 
-                  className="w-10 h-10 rounded-full bg-cover bg-center mr-3 border-2 border-white/30"
-                  style={{ backgroundImage: `url(${authorImage})` }}
-                ></div>
-                <div>
-                  <div className="font-medium">{author}</div>
-                  <div className="text-xs text-white/70">{date} · {readTime}</div>
-                </div>
-              </div>
-              
-              <button 
-                className="no-flip flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all"
-                onClick={(e) => e.stopPropagation()} // Prevent card flip
+        className="absolute top-6 right-8 w-4 h-4 rounded-full bg-[#b59b6a] opacity-60 shadow-lg z-20"
+        variants={sparkleVariants}
+        animate="animate"
+        style={{ filter: 'blur(1px)' }}
+      />
+      {/* Image Gallery */}
+      {galleryImages.length > 0 && (
+        <div className="w-full h-56 bg-gray-200 border-b-2 border-[#e2d8c3] relative flex items-center justify-center overflow-hidden carousel-hide-scrollbar">
+          <img
+            src={galleryImages[galleryIndex]}
+            alt={title}
+            className="w-full h-56 object-cover object-center rounded-t-xl transition-all duration-300"
+            draggable={false}
+          />
+          {galleryImages.length > 1 && (
+            <>
+              <button
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#fffbe9] border border-[#b59b6a] rounded-full p-2 shadow hover:bg-[#b59b6a] hover:text-white transition-colors z-10"
+                onClick={e => { e.stopPropagation(); setGalleryIndex((galleryIndex - 1 + galleryImages.length) % galleryImages.length); }}
+                aria-label="Previous image"
               >
-                <FaArrowRight className="text-sm" />
+                &#8592;
               </button>
-            </div>
-          </div>
+              <button
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#fffbe9] border border-[#b59b6a] rounded-full p-2 shadow hover:bg-[#b59b6a] hover:text-white transition-colors z-10"
+                onClick={e => { e.stopPropagation(); setGalleryIndex((galleryIndex + 1) % galleryImages.length); }}
+                aria-label="Next image"
+              >
+                &#8594;
+              </button>
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+                {galleryImages.map((_, idx) => (
+                  <span key={idx} className={`w-2 h-2 rounded-full ${galleryIndex === idx ? 'bg-[#b59b6a]' : 'bg-[#e2d8c3]'}`}></span>
+                ))}
+              </div>
+            </>
+          )}
         </div>
-        
-        {/* Back of Card */}
-        <div className={`absolute w-full h-full backface-hidden rounded-3xl overflow-hidden ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 'bg-gradient-to-br from-indigo-900 to-purple-900'} text-white p-8 rotate-y-180`}>
-          <h2 className="text-2xl font-bold mb-6">About This Article</h2>
-          
-          <p className="mb-6">{excerpt}</p>
-          
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-3">Key Topics:</h3>
-            <ul className="space-y-2">
-              {['Modern Design Principles', 'Performance Optimization', 'Accessibility Standards', 'User Experience'].map((topic) => (
-                <li key={topic} className="flex items-center">
-                  <span className={`w-6 h-6 rounded-full ${darkMode ? 'bg-indigo-500/30' : 'bg-indigo-400/30'} flex items-center justify-center mr-3`}>
-                    <FaCheck className="text-xs" />
-                  </span>
-                  {topic}
-                </li>
-              ))}
-            </ul>
+      )}
+      {/* Content */}
+      <div className="flex-1 flex flex-col justify-between p-8 pb-10 relative z-10">
+        <div>
+          <div className="flex gap-2 mb-2 flex-wrap">
+            <span className="bg-[#f5ecd9] border border-[#e2d8c3] px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest">{category}</span>
+            {tags && tags.map(tag => (
+              <span
+                key={tag}
+                className={`border px-3 py-1 rounded-full text-xs font-semibold tracking-wider ml-1 ${tagColors[tag] || 'bg-[#f5ecd9] text-[#7c5e2a] border-[#e2d8c3]'}`}
+                style={{ fontFamily: 'Merriweather, serif' }}
+              >
+                {tag}
+              </span>
+            ))}
           </div>
-          
-          <div className="flex justify-between text-white/80">
-            <div className="flex items-center">
-              <span className="mr-3">
-                <FaHeart className="text-xl" />
-              </span>
-              2.4K
-            </div>
-            
-            <div className="flex items-center">
-              <span className="mr-3">
-                <FaComment className="text-xl" />
-              </span>
-              86
-            </div>
-            
-            <div className="flex items-center">
-              <span className="mr-3">
-                <FaBookmark className="text-xl" />
-              </span>
-              350
-            </div>
-          </div>
-          
-          <button 
-            className="no-flip w-full py-3 bg-white text-indigo-900 font-semibold rounded-full mt-8 transition-all transform hover:scale-105"
-            onClick={(e) => {
-              e.stopPropagation(); // Prevent card flip
-              setIsFlipped(false); // Flip back to front
-            }}
-          >
-            Back to Article
-          </button>
+          <h2 className="text-2xl font-extrabold mb-1 leading-tight" style={{ fontFamily: 'EB Garamond, serif' }}>{title}</h2>
+          {/* Gold accent line */}
+          <div className="w-16 h-1 bg-[#b59b6a] rounded-full mb-3 mt-1"></div>
+          <p className="drop-cap text-base leading-relaxed mb-4 line-clamp-2" style={{ fontFamily: 'Merriweather, serif' }}>{excerpt}</p>
         </div>
-      </motion.div>
-    </div>
+        <div className="flex justify-between items-end mt-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-cover bg-center border border-black" style={{ backgroundImage: `url(${authorImage})` }}></div>
+            <div>
+              <div className="font-semibold text-sm">{author}</div>
+              <div className="text-xs text-gray-700">{date} · {readTime}</div>
+            </div>
+          </div>
+          <Link to={`/blog/${id}`} className="no-flip flex items-center justify-center w-10 h-10 border border-black rounded-full bg-[#f5ecd9] hover:bg-black hover:text-[#f5ecd9] transition-colors" onClick={e => e.stopPropagation()}>
+            <FaArrowRight className="text-base" />
+          </Link>
+        </div>
+      </div>
+      {/* Torn paper effect at bottom */}
+      <div className="absolute left-0 bottom-0 w-full h-8 z-10" style={{ pointerEvents: 'none' }}>
+        <svg viewBox="0 0 400 40" width="100%" height="100%" preserveAspectRatio="none">
+          <path d="M0,20 Q40,40 80,20 T160,20 T240,20 T320,20 T400,20 V40 H0 Z" fill="#fffbe9" stroke="#b59b6a" strokeWidth="2" />
+        </svg>
+      </div>
+    </motion.div>
   );
-};
+}

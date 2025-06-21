@@ -1,1 +1,70 @@
 @import "tailwindcss";
+
+body {
+  font-family: 'EB Garamond', 'Merriweather', serif;
+  background-color: #f5ecd9;
+  color: #222;
+  letter-spacing: 0.01em;
+  /* Subtle fine grain overlay for vintage touch */
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.08;
+  background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1.5" fill="%239c8b6e"/><circle cx="30" cy="10" r="1" fill="%239c8b6e"/><circle cx="20" cy="30" r="0.7" fill="%239c8b6e"/><circle cx="38" cy="38" r="0.5" fill="%239c8b6e"/></svg>');
+  background-repeat: repeat;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'EB Garamond', 'Merriweather', serif;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.container {
+  max-width: 900px;
+}
+
+hr {
+  border-top: 2px solid #222;
+  opacity: 0.2;
+}
+
+/* Drop cap for first letter in article excerpts */
+.drop-cap:first-letter {
+  float: left;
+  font-size: 3.5em;
+  line-height: 0.7;
+  font-weight: bold;
+  margin-right: 0.1em;
+  color: #b59b6a;
+  font-family: 'EB Garamond', serif;
+}
+
+/* Subtle paper shadow and parchment background for cards */
+.paper-shadow {
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08), 0 1.5px 0 0 #e2d8c3;
+  border-radius: 0.5em;
+  background: #fffbe9ee;
+}
+
+/* Blog card whiteish, parchment look */
+.blog-card-parchment {
+  background: #fffefb;
+  border: 2px solid #e2d8c3;
+  box-shadow: 0 2px 12px 0 rgba(181,155,106,0.06);
+}
+
+/* Hide scrollbars for all browsers */
+.carousel-hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.carousel-hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
