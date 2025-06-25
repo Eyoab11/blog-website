@@ -1,114 +1,72 @@
-const allBlogs = [
+export const allBlogs = [
   {
     id: 1,
-    title: "The Art of Clean Code",
-    excerpt: "Exploring how philosophical principles can guide us to write better, more maintainable code.",
-    category: "Philosophy",
-    date: "May 15, 2023",
-    tags: ["Philosophy", "Technology"],
-    imageUrl: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
-    content: `Exploring how philosophical principles can guide us to write better, more maintainable code.\n\nClean code is not just about syntax, but about clarity, simplicity, and purpose. Drawing from ancient philosophy, we can learn to approach programming with mindfulness and intention.\n\nA well-written function is like a well-formed argument: it is logical, concise, and leaves no room for ambiguity. By applying these principles, we elevate our craft and create software that stands the test of time.`
+    title: "Then going through some small strange motions",
+    excerpt: "A moderate incline runs towards the foot of Maybury Hill, and down this we clattered. Once the lightning had begun, it went on in as rapid a succession of flashes as I have ever seen.",
+    image: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    date: "April 8, 2023",
+    categories: ["Featured", "Food"],
+    tags: ["Featured", "Food"],
+    content: "A moderate incline runs towards the foot of Maybury Hill, and down this we clattered. Once the lightning had begun, it went on in as rapid a succession of flashes as I have ever seen. At first I took it for the wet roof of a house, but one flash following another showed it to be in swift rolling motion..."
   },
   {
     id: 2,
-    title: "React for Musicians: Harmonizing UI",
-    excerpt: "How music theory can inspire better component architecture in React.",
-    category: "Music",
-    date: "June 2, 2023",
-    tags: ["Music", "Technology"],
-    imageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80",
-    content: `How music theory can inspire better component architecture in React.\n\nJust as harmony in music is achieved by combining different notes, harmony in UI is achieved by combining reusable components.\n\nBy thinking like a composer, you can orchestrate your React components to create a seamless and beautiful user experience.`
+    title: "The sunset faded to twilight",
+    excerpt: "I began walking, therefore, in a big curve, seeking some point of vantage and continually looking at the sand.",
+    image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    date: "April 11, 2023",
+    categories: ["Photo", "Trending"],
+    tags: ["Photo", "Trending"],
+    content: "I began walking, therefore, in a big curve, seeking some point of vantage and continually looking at the sand. The valley was evidently the path of a considerable body of water flowing northward, and I hoped that by following it I might come upon some settlement..."
   },
   {
     id: 3,
-    title: "Laughing at Bugs: Humor in Debugging",
-    excerpt: "Why a sense of humor is a developer's secret weapon against tough bugs.",
-    category: "Humor",
-    date: "July 10, 2023",
-    tags: ["Humor", "Technology"],
-    imageUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
-    content: `Why a sense of humor is a developer's secret weapon against tough bugs.\n\nDebugging can be frustrating, but laughter lightens the load. A funny error message or a clever comment can turn a tough day into a memorable one.\n\nRemember: every bug is just a feature waiting for a punchline!`
+    title: "Two long weeks I wandered",
+    excerpt: "Through two long weeks I wandered, stumbling through the nights guided only by the stars and hiding during the days behind some protruding rock or among the occasional hills I traversed.",
+    image: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    date: "April 8, 2023",
+    categories: ["Lifestyle"],
+    tags: ["Lifestyle"],
+    content: "Through two long weeks I wandered, stumbling through the nights guided only by the stars and hiding during the days behind some protruding rock or among the occasional hills I traversed. Several times I was attacked by some of the wild dogs that roamed the hills..."
   },
   {
     id: 4,
-    title: "Designing with Empathy",
-    excerpt: "How understanding users' emotions leads to better product design.",
-    category: "Design",
-    date: "August 12, 2023",
-    tags: ["Design", "Philosophy"],
-    imageUrl: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=600&q=80",
-    content: `How understanding users' emotions leads to better product design.\n\nEmpathy is the foundation of great design. By putting yourself in the user's shoes, you can create products that truly resonate and solve real problems.\n\nDesign is not just about aesthetics—it's about connection.`
+    title: "At daybreak of the fifteenth day of my search",
+    excerpt: "When the amphitheater had cleared I crept stealthily to the top and as the great excavation lay far from the plaza.",
+    image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    date: "February 1, 2023",
+    categories: ["Featured", "Lifestyle"],
+    tags: ["Featured", "Lifestyle"],
+    content: "When the amphitheater had cleared I crept stealthily to the top and as the great excavation lay far from the plaza. There was no one in sight, and so I stepped boldly out upon the plateau. The ground was covered with debris..."
   },
   {
     id: 5,
-    title: "JavaScript: The Language of the Web",
-    excerpt: "A journey through the quirks and beauty of JavaScript.",
-    category: "JavaScript",
-    date: "September 5, 2023",
-    tags: ["JavaScript", "Technology"],
-    imageUrl: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
-    content: `A journey through the quirks and beauty of JavaScript.\n\nFrom callbacks to promises, closures to prototypes, JavaScript is a language that rewards curiosity and creativity.\n\nEmbrace the weirdness, and you'll discover the magic that powers the modern web.`
+    title: "The great excavation lay far from the plaza",
+    excerpt: "Far from the plaza and in an untenanted portion of the great dead city I had little trouble in reaching the hills beyond.",
+    image: "https://images.unsplash.com/photo-1461696114087-397271a7aedc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    date: "January 16, 2023",
+    categories: ["Photo"],
+    tags: ["Photo"],
+    content: "Far from the plaza and in an untenanted portion of the great dead city I had little trouble in reaching the hills beyond. The buildings upon the outskirts were deserted, and while I hunted for some means of making my way to the mountains I discovered that the district was sparsely settled..."
   },
   {
     id: 6,
-    title: "React vs. Vue: A Friendly Duel",
-    excerpt: "Comparing two of the most popular frontend frameworks with a touch of humor.",
-    category: "React",
-    date: "October 1, 2023",
-    tags: ["React", "Humor", "Technology"],
-    imageUrl: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=600&q=80",
-    content: `Comparing two of the most popular frontend frameworks with a touch of humor.\n\nReact and Vue each have their fans, but at the end of the day, both help us build amazing apps.\n\nMay the best framework win—or better yet, may we all learn from each other!`
+    title: "We Are Testing A Pagination Here",
+    excerpt: "I can compare it to nothing but a large door mat, ornamented at the edges with little tinkling tags.",
+    image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    date: "January 3, 2023",
+    categories: ["Staff's Picks"],
+    tags: ["Staff's Picks"],
+    content: "I can compare it to nothing but a large door mat, ornamented at the edges with little tinkling tags. The inside of the cylinder was filled with a soft, yellowish substance, like cheese, but which was quite tasteless..."
   },
   {
     id: 7,
-    title: "The Zen of Coding",
-    excerpt: "How mindfulness can improve your code and your life.",
-    category: "Philosophy",
-    date: "October 20, 2023",
-    tags: ["Philosophy", "Wellness"],
-    imageUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
-    content: `How mindfulness can improve your code and your life.\n\nTake a deep breath, clear your mind, and let your code flow. Mindful coding leads to fewer bugs and more joy.\n\nZen and the art of software maintenance!`
-  },
-  {
-    id: 8,
-    title: "Music in the Terminal",
-    excerpt: "Exploring CLI tools that let you play and compose music right from your terminal.",
-    category: "Music",
-    date: "November 2, 2023",
-    tags: ["Music", "Technology"],
-    imageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80",
-    content: `Exploring CLI tools that let you play and compose music right from your terminal.\n\nFrom beeps to full symphonies, the terminal is more musical than you think.\n\nTry it out and make your code sing!`
-  },
-  {
-    id: 9,
-    title: "Why Developers Love Memes",
-    excerpt: "A humorous look at meme culture in the tech world.",
-    category: "Humor",
-    date: "November 15, 2023",
-    tags: ["Humor", "Community"],
-    imageUrl: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
-    content: `A humorous look at meme culture in the tech world.\n\nMemes are the universal language of developers. They help us bond, vent, and laugh at the absurdities of our craft.\n\nKeep calm and meme on!`
-  },
-  {
-    id: 10,
-    title: "The Art of Refactoring",
-    excerpt: "Refactoring code is like composing music: it takes practice and creativity.",
-    category: "Design",
-    date: "December 1, 2023",
-    tags: ["Design", "Music"],
-    imageUrl: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=600&q=80",
-    content: `Refactoring code is like composing music: it takes practice and creativity.\n\nA good refactor brings harmony to your codebase and makes future changes a breeze.\n\nDon't fear the refactor—embrace it!`
-  },
-  {
-    id: 11,
-    title: "Tech for Good: Coding with Purpose",
-    excerpt: "How technology can be used to make a positive impact in the world.",
-    category: "Technology",
-    date: "December 15, 2023",
-    tags: ["Technology", "Wellness"],
-    imageUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
-    content: `How technology can be used to make a positive impact in the world.\n\nCode is a powerful tool for change. Use your skills to build a better, kinder, and more inclusive world.\n\nLet's code for good!`
+    title: "It is very curious to watch this",
+    excerpt: "By the light of the now brilliant moons I saw that he was but a shadow of his former self, and as he turned from my caress and commenced greedily.",
+    image: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    date: "December 3, 2022",
+    categories: ["Lifestyle", "Trending"],
+    tags: ["Lifestyle", "Trending"],
+    content: "By the light of the now brilliant moons I saw that he was but a shadow of his former self, and as he turned from my caress and commenced greedily to devour the dead thoat, I realized that the poor fellow was more than half starved..."
   }
-];
-
-export default allBlogs; 
+]; 
