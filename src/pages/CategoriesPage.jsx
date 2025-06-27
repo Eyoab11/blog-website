@@ -242,9 +242,9 @@ const CategoriesPage = () => {
       {/* Newsletter Section */}
       <div className="bg-gray-900 text-white py-16 mt-16">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Love for the writing is our best strategy!</h2>
+          <h2 className="text-3xl font-bold mb-4 text-white">Love for the writing is our best strategy!</h2>
           <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-            Subscribe to our newsletter and get the latest updates straight to your inbox.
+            Subscribe to my newsletter and get the latest updates straight to your inbox.
           </p>
           <form className="newsletter-form max-w-lg mx-auto">
             <input
