@@ -65,11 +65,11 @@ const CategoriesPage = () => {
   if (loading) return <div className="min-h-screen flex items-center justify-center text-2xl">Loading...</div>;
 
   return (
-    <div className="min-h-screen mt-8">
+    <div className="min-h-screen">
       {/* Header Section */}
       <div className="bg-gray-900 text-white py-20 mb-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Categories</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: '#0E79B2' }}>Categories</h1>
           <p className="text-gray-300 max-w-2xl mx-auto">
             Explore our articles by categories and discover stories that interest you.
           </p>

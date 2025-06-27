@@ -40,16 +40,18 @@ export const Newsletter = () => {
         </p>
         <form className="newsletter-form w-full flex flex-col sm:flex-row gap-4 items-center justify-center" onSubmit={handleSubmit}>
           <div className="relative flex-grow w-full">
-            <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#0E79B2]" />
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your email address"
-              className="newsletter-input w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 bg-white text-black placeholder-gray-400 focus:ring-2 focus:ring-[#0E79B2] focus:outline-none shadow-sm text-lg transition-all duration-300 focus:border-[#0E79B2]"
-              style={{ fontFamily: 'Merriweather, serif' }}
-              required
-            />
+            <div className="flex items-center gap-3">
+              <FiMail className="text-2xl text-[#0E79B2]" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email address"
+                className="newsletter-input w-full pr-4 py-3 rounded-lg border border-gray-300 bg-white text-black placeholder-gray-400 focus:ring-2 focus:ring-[#0E79B2] focus:outline-none shadow-sm text-lg transition-all duration-300 focus:border-[#0E79B2]"
+                style={{ fontFamily: 'Merriweather, serif' }}
+                required
+              />
+            </div>
           </div>
           <button
             type="submit"

@@ -51,17 +51,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-list {
+  display: flex;
   justify-content: center;
   gap: 2rem;
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-@media (min-width: 768px) {
-  .nav-list {
-    display: flex;
-  }
 }
 
 .nav-link {
@@ -198,11 +193,5 @@ h1, h2, h3, h4, h5, h6 {
   
   .blog-card-image {
     height: 200px;
-  }
-  .site-header {
-    padding: 1rem 0;
-  }
-  .main-nav {
-    padding: 0.5rem 0;
   }
 }

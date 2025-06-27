@@ -30,7 +30,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Featured Post */}
-      <div className="relative mb-16 lg:min-h-[600px] mt-8">
+      <div className="relative h-[600px] mb-16">
         <div className="absolute inset-0">
           <img
             src={featuredPost.image_url}
@@ -39,9 +39,9 @@ const Home = () => {
           />
           <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         </div>
-        <div className="relative container mx-auto px-4 h-full flex flex-col lg:flex-row items-center">
-          <div className="max-w-2xl text-white z-10 flex-1">
-            <div className="mb-4 mt-8 lg:mt-0">
+        <div className="relative container mx-auto px-4 h-full flex items-center">
+          <div className="max-w-2xl text-white">
+            <div className="mb-4">
               <span className="text-sm uppercase tracking-wider mr-2">{featuredPost.created_at?.slice(0, 10)}</span>
               {featuredPost.tags?.map((category, index) => (
                 <Link
@@ -53,7 +53,7 @@ const Home = () => {
                 </Link>
               ))}
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: '#0E79B2' }}>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
               <Link to={`/blog/${featuredPost.id}`} className="hover:text-gray-200" style={{ color: '#0E79B2' }}>
                 {featuredPost.title}
               </Link>
@@ -66,15 +66,6 @@ const Home = () => {
               Read More
             </Link>
           </div>
-          {/* Featured Image: right on large screens, below on small screens */}
-          <div className="flex justify-center items-center w-full lg:w-auto mt-8 lg:mt-0 flex-1 z-10 mb-8 lg:mb-0">
-            <img
-              src={featuredPost.image_url}
-              alt={featuredPost.title}
-              className="h-[300px] md:h-[350px] lg:h-[400px] w-auto rounded-2xl shadow-2xl object-cover border-4 border-white"
-              style={{ maxHeight: '80%', maxWidth: '90%' }}
-            />
-          </div>
         </div>
       </div>
 
@@ -82,7 +73,7 @@ const Home = () => {
       <div className="container mx-auto px-4 mb-16">
         <div className="text-center mb-12">
           <h2 className="text-sm uppercase tracking-widest text-gray-600 mb-2">BROWSE AND READ THE LATEST STUFF</h2>
-          <h3 className="text-3xl font-bold">Latest Stories</h3>
+          <h3 className="text-3xl font-bold" style={{ color: '#0E79B2' }}>Latest Stories</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
