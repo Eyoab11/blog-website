@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { supabase } from '../../supabaseClient';
+import emailjs from 'emailjs-com';
 
+// Contact form now uses Supabase for submissions and EmailJS for email delivery.
 const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -7,6 +10,7 @@ const ContactPage = () => {
     subject: '',
     message: ''
   });
+  const [status, setStatus] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -15,14 +19,47 @@ const ContactPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
+    setStatus('');
+    const { name, email, subject, message } = formData;
+    if (!name || !email || !message) {
+      setStatus('Please fill in all required fields.');
+      return;
+    }
+    // 1. Save to Supabase
+    const { error } = await supabase
+      .from('contacts')
+      .insert([{ name, email, message }]);
+    if (error) {
+      setStatus('Something went wrong. Please try again.');
+      return;
+    }
+    // 2. Send email via EmailJS using env variables
+    emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      {
+        from_name: name,
+        from_email: email,
+        subject: subject,
+        message: message,
+        time: new Date().toLocaleString(),
+      },
+      import.meta.env.VITE_EMAILJS_USER_ID
+    ).then(
+      (result) => {
+        setStatus('Message sent! Thank you for reaching out.');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      },
+      (error) => {
+        setStatus('Message saved, but email notification failed.');
+      }
+    );
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mt-8">
       {/* Header Section */}
       <div className="bg-gray-900 text-white py-20">
         <div className="container mx-auto px-4 text-center">
@@ -178,6 +215,24 @@ const ContactPage = () => {
                 </button>
               </div>
             </form>
+            {status && (
+              <div
+                className={`mt-6 flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium shadow-md
+                  ${status.toLowerCase().includes('thank') || status.toLowerCase().includes('sent') ? 'bg-green-100 text-green-800 border border-green-300' :
+                    status.toLowerCase().includes('wrong') || status.toLowerCase().includes('try again') ? 'bg-[#E3F2FA] text-[#0E79B2] border border-[#B3DDF2]' :
+                    'bg-yellow-100 text-yellow-800 border border-yellow-300'}`}
+                role="alert"
+              >
+                {status.toLowerCase().includes('thank') || status.toLowerCase().includes('sent') ? (
+                  <svg className="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
+                ) : status.toLowerCase().includes('wrong') || status.toLowerCase().includes('try again') ? (
+                  <svg className="w-5 h-5 mr-2 text-[#0E79B2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                ) : (
+                  <svg className="w-5 h-5 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01" /></svg>
+                )}
+                <span>{status}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

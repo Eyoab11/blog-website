@@ -1,27 +1,49 @@
 import { Link } from 'react-router-dom';
-import { allBlogs } from './allBlogs';
+import { useEffect, useState } from 'react';
+import { supabase } from '../../supabaseClient';
+import { Newsletter } from '../components/home/Newsletter';
+import eyoabImg from '../assets/Eyoab-removebg-preview.png';
 
 const Home = () => {
-  const featuredPost = allBlogs[0]; // Using the first blog as featured
-  const latestPosts = allBlogs.slice(1, 7); // Get next 6 posts for latest stories
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('blogs')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error) setBlogs(data || []);
+      setLoading(false);
+    };
+    fetchBlogs();
+  }, []);
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-2xl">Loading...</div>;
+  if (!blogs.length) return <div className="min-h-screen flex items-center justify-center text-2xl">No blogs found.</div>;
+
+  const featuredPost = blogs[0];
+  const latestPosts = blogs.slice(0, 7);
 
   return (
     <div className="min-h-screen">
       {/* Featured Post */}
-      <div className="relative h-[600px] mb-16">
+      <div className="relative mb-16 lg:min-h-[600px] mt-8">
         <div className="absolute inset-0">
           <img
-            src={featuredPost.image}
+            src={featuredPost.image_url}
             alt={featuredPost.title}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         </div>
-        <div className="relative container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-2xl text-white">
-            <div className="mb-4">
-              <span className="text-sm uppercase tracking-wider mr-2">{featuredPost.date}</span>
-              {featuredPost.categories.map((category, index) => (
+        <div className="relative container mx-auto px-4 h-full flex flex-col lg:flex-row items-center">
+          <div className="max-w-2xl text-white z-10 flex-1">
+            <div className="mb-4 mt-8 lg:mt-0">
+              <span className="text-sm uppercase tracking-wider mr-2">{featuredPost.created_at?.slice(0, 10)}</span>
+              {featuredPost.tags?.map((category, index) => (
                 <Link
                   key={index}
                   to={`/category/${category.toLowerCase()}`}
@@ -31,8 +53,8 @@ const Home = () => {
                 </Link>
               ))}
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              <Link to={`/blog/${featuredPost.id}`} className="hover:text-gray-200">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: '#0E79B2' }}>
+              <Link to={`/blog/${featuredPost.id}`} className="hover:text-gray-200" style={{ color: '#0E79B2' }}>
                 {featuredPost.title}
               </Link>
             </h1>
@@ -43,6 +65,15 @@ const Home = () => {
             >
               Read More
             </Link>
+          </div>
+          {/* Featured Image: right on large screens, below on small screens */}
+          <div className="flex justify-center items-center w-full lg:w-auto mt-8 lg:mt-0 flex-1 z-10 mb-8 lg:mb-0">
+            <img
+              src={featuredPost.image_url}
+              alt={featuredPost.title}
+              className="h-[300px] md:h-[350px] lg:h-[400px] w-auto rounded-2xl shadow-2xl object-cover border-4 border-white"
+              style={{ maxHeight: '80%', maxWidth: '90%' }}
+            />
           </div>
         </div>
       </div>
@@ -56,44 +87,59 @@ const Home = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {latestPosts.map((post) => (
-            <article key={post.id} className="blog-card">
+            <article key={post.id} className="blog-card min-h-[420px] flex flex-col">
               <Link to={`/blog/${post.id}`}>
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="blog-card-image"
-                />
+                {post.image_url ? (
+                  <img
+                    src={post.image_url}
+                    alt={post.title}
+                    className="blog-card-image"
+                  />
+                ) : (
+                  <div className="blog-card-image bg-gray-200 flex items-center justify-center text-gray-400 text-xl">No Image</div>
+                )}
               </Link>
-              <div className="blog-card-content">
-                <div className="mb-3">
-                  <span className="text-sm text-gray-500 mr-2">{post.date}</span>
-                  {post.categories.map((category, index) => (
-                    <Link
-                      key={index}
-                      to={`/category/${category.toLowerCase()}`}
-                      className="text-sm text-primary-600 mr-2"
-                    >
-                      {category}
+              <div className="blog-card-content flex flex-col flex-1 justify-between">
+                <div>
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="text-sm text-gray-500 mr-2">{post.created_at?.slice(0, 10)}</span>
+                    {post.tags?.map((category, index) => (
+                      <Link
+                        key={index}
+                        to={`/category/${category.toLowerCase()}`}
+                        className="text-xs text-primary-600 mr-2"
+                      >
+                        {category}
+                      </Link>
+                    ))}
+                  </div>
+                  <h2 className="blog-card-title mt-2">
+                    <Link to={`/blog/${post.id}`} className="hover:text-primary-600">
+                      {post.title}
                     </Link>
-                  ))}
+                  </h2>
+                  <p className="blog-card-excerpt text-gray-600">
+                    {post.excerpt}
+                  </p>
                 </div>
-                <h2 className="blog-card-title">
-                  <Link to={`/blog/${post.id}`} className="hover:text-primary-600">
-                    {post.title}
-                  </Link>
-                </h2>
-                <p className="blog-card-excerpt text-gray-600">
-                  {post.excerpt}
-                </p>
-                <Link
-                  to={`/blog/${post.id}`}
-                  className="inline-flex items-center text-primary-600 hover:text-primary-700"
-                >
-                  Read More
-                  <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </Link>
+                <div className="flex flex-row items-end justify-between mt-4 w-full">
+                  <div className="flex flex-col items-start">
+                    <span className="text-xs text-gray-500 mb-1">{post.read_time || '5 min read'}</span>
+                    <Link
+                      to={`/blog/${post.id}`}
+                      className="inline-flex items-center text-primary-600 hover:text-primary-700"
+                    >
+                      Read More
+                      <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </Link>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-cover bg-center border border-black" style={{ backgroundImage: `url(${eyoabImg})` }}></div>
+                    <span className="font-semibold text-sm">{post.author || 'Eyoab Amare'}</span>
+                  </div>
+                </div>
               </div>
             </article>
           ))}
@@ -101,25 +147,7 @@ const Home = () => {
       </div>
 
       {/* Newsletter Section */}
-      <div className="bg-gray-900 text-white py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Love for the writing is our best strategy!</h2>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-            Subscribe to our newsletter and get the latest updates straight to your inbox.
-          </p>
-          <form className="newsletter-form max-w-lg mx-auto">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="newsletter-input"
-              required
-            />
-            <button type="submit" className="newsletter-button">
-              Sign Up
-            </button>
-          </form>
-        </div>
-      </div>
+      <Newsletter />
     </div>
   );
 };

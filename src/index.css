@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --primary-color: #ff4757;
+  --primary-color: #0E79B2;
   --text-color: #2f3542;
   --heading-color: #1e272e;
   --background-color: #ffffff;
@@ -51,12 +51,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-list {
-  display: flex;
   justify-content: center;
   gap: 2rem;
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+@media (min-width: 768px) {
+  .nav-list {
+    display: flex;
+  }
 }
 
 .nav-link {
@@ -176,7 +181,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .newsletter-button:hover {
-  background-color: #ff6b81;
+  background-color: #0E79B2CC;
 }
 
 /* Responsive Design */
@@ -193,5 +198,11 @@ h1, h2, h3, h4, h5, h6 {
   
   .blog-card-image {
     height: 200px;
+  }
+  .site-header {
+    padding: 1rem 0;
+  }
+  .main-nav {
+    padding: 0.5rem 0;
   }
 }

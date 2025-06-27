@@ -1,31 +1,44 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { allBlogs } from './allBlogs';
-
-const getAllTags = (blogs) => {
-  const tags = new Set();
-  blogs.forEach(blog => (blog.tags && blog.tags.length ? blog.tags : ["General"]).forEach(tag => tags.add(tag)));
-  return Array.from(tags);
-};
+import { supabase } from '../../supabaseClient';
+import eyoabImg from '../assets/Eyoab-removebg-preview.png';
 
 const CategoriesPage = () => {
-  const allTags = getAllTags(allBlogs);
+  const [blogs, setBlogs] = useState([]);
+  const [allTags, setAllTags] = useState([]);
   const [selectedTag, setSelectedTag] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredBlogs, setFilteredBlogs] = useState(allBlogs);
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [activeSort, setActiveSort] = useState('newest');
+  const [loading, setLoading] = useState(true);
 
-  // Filter and sort blogs based on selected criteria
   useEffect(() => {
-    let filtered = [...allBlogs];
+    const fetchBlogs = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('blogs')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data) {
+        setBlogs(data);
+        // Extract unique tags from all blogs
+        const tagsSet = new Set();
+        data.forEach(blog => (blog.tags && blog.tags.length ? blog.tags : ["General"]).forEach(tag => tagsSet.add(tag)));
+        setAllTags(Array.from(tagsSet));
+      }
+      setLoading(false);
+    };
+    fetchBlogs();
+  }, []);
 
+  useEffect(() => {
+    let filtered = [...blogs];
     // Filter by tag
     if (selectedTag !== 'All') {
-      filtered = filtered.filter(blog => 
+      filtered = filtered.filter(blog =>
         (blog.tags && blog.tags.length ? blog.tags : ["General"]).includes(selectedTag)
       );
     }
-
     // Filter by search query
     if (searchQuery) {
       filtered = filtered.filter(blog =>
@@ -33,26 +46,26 @@ const CategoriesPage = () => {
         blog.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
     // Sort blogs
     filtered.sort((a, b) => {
       switch (activeSort) {
         case 'newest':
-          return new Date(b.date) - new Date(a.date);
+          return new Date(b.created_at) - new Date(a.created_at);
         case 'oldest':
-          return new Date(a.date) - new Date(b.date);
+          return new Date(a.created_at) - new Date(b.created_at);
         case 'title':
           return a.title.localeCompare(b.title);
         default:
           return 0;
       }
     });
-
     setFilteredBlogs(filtered);
-  }, [selectedTag, searchQuery, activeSort]);
+  }, [blogs, selectedTag, searchQuery, activeSort]);
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-2xl">Loading...</div>;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mt-8">
       {/* Header Section */}
       <div className="bg-gray-900 text-white py-20 mb-16">
         <div className="container mx-auto px-4 text-center">
@@ -157,44 +170,59 @@ const CategoriesPage = () => {
         {/* Blog Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredBlogs.map(blog => (
-            <article key={blog.id} className="blog-card">
+            <article key={blog.id} className="blog-card min-h-[420px] flex flex-col">
               <Link to={`/blog/${blog.id}`}>
-                <img
-                  src={blog.image}
-                  alt={blog.title}
-                  className="blog-card-image"
-                />
+                {blog.image_url ? (
+                  <img
+                    src={blog.image_url}
+                    alt={blog.title}
+                    className="blog-card-image"
+                  />
+                ) : (
+                  <div className="blog-card-image bg-gray-200 flex items-center justify-center text-gray-400 text-xl">No Image</div>
+                )}
               </Link>
-              <div className="blog-card-content">
-                <div className="mb-3">
-                  <span className="text-sm text-gray-500 mr-2">{blog.date}</span>
-                  {(blog.tags && blog.tags.length ? blog.tags : ["General"]).map((tag, index) => (
-                    <Link
-                      key={index}
-                      to={`/category/${tag.toLowerCase()}`}
-                      className="text-sm text-primary-600 mr-2"
-                    >
-                      {tag}
+              <div className="blog-card-content flex flex-col flex-1 justify-between">
+                <div>
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="text-sm text-gray-500 mr-2">{blog.created_at?.slice(0, 10)}</span>
+                    {(blog.tags && blog.tags.length ? blog.tags : ["General"]).map((tag, index) => (
+                      <Link
+                        key={index}
+                        to={`/category/${tag.toLowerCase()}`}
+                        className="text-xs text-primary-600 mr-2"
+                      >
+                        {tag}
+                      </Link>
+                    ))}
+                  </div>
+                  <h2 className="blog-card-title mt-2">
+                    <Link to={`/blog/${blog.id}`} className="hover:text-primary-600">
+                      {blog.title}
                     </Link>
-                  ))}
+                  </h2>
+                  <p className="blog-card-excerpt text-gray-600">
+                    {blog.excerpt}
+                  </p>
                 </div>
-                <h2 className="blog-card-title">
-                  <Link to={`/blog/${blog.id}`} className="hover:text-primary-600">
-                    {blog.title}
-                  </Link>
-                </h2>
-                <p className="blog-card-excerpt text-gray-600">
-                  {blog.excerpt}
-                </p>
-                <Link
-                  to={`/blog/${blog.id}`}
-                  className="inline-flex items-center text-primary-600 hover:text-primary-700"
-                >
-                  Read More
-                  <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </Link>
+                <div className="flex flex-row items-end justify-between mt-4 w-full">
+                  <div className="flex flex-col items-start">
+                    <Link
+                      to={`/blog/${blog.id}`}
+                      className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-1"
+                    >
+                      Read More
+                      <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </Link>
+                    <span className="text-xs text-gray-500">{blog.read_time || '5 min read'}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-cover bg-center border border-black" style={{ backgroundImage: `url(${eyoabImg})` }}></div>
+                    <span className="font-semibold text-sm">{blog.author || 'Eyoab Amare'}</span>
+                  </div>
+                </div>
               </div>
             </article>
           ))}
