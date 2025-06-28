@@ -22,4 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables
 .env
+
+# Supabase configuration and functions
+supabase/
+setup-email-notifications.md
