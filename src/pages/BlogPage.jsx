@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 // import Header from '../components/header';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../supabaseClient';
+import ReactMarkdown from 'react-markdown';
 
 const BlogPage = () => {
   const { id } = useParams();
@@ -46,7 +47,7 @@ const BlogPage = () => {
         </div>
         {/* Blog Content */}
         <div className="prose prose-lg max-w-none">
-          {blog.content || blog.excerpt}
+          {blog.content ? <ReactMarkdown>{blog.content}</ReactMarkdown> : blog.excerpt}
         </div>
       </main>
     </div>

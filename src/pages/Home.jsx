@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../supabaseClient';
 import { Newsletter } from '../components/home/Newsletter';
@@ -7,6 +7,8 @@ import eyoabImg from '../assets/Eyoab-removebg-preview.png';
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(7);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -25,7 +27,7 @@ const Home = () => {
   if (!blogs.length) return <div className="min-h-screen flex items-center justify-center text-2xl">No blogs found.</div>;
 
   const featuredPost = blogs[0];
-  const latestPosts = blogs.slice(0, 7);
+  const latestPosts = blogs.slice(0, visibleCount);
 
   return (
     <div className="min-h-screen">
@@ -78,18 +80,22 @@ const Home = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {latestPosts.map((post) => (
-            <article key={post.id} className="blog-card min-h-[420px] flex flex-col">
-              <Link to={`/blog/${post.id}`}>
-                {post.image_url ? (
-                  <img
-                    src={post.image_url}
-                    alt={post.title}
-                    className="blog-card-image"
-                  />
-                ) : (
-                  <div className="blog-card-image bg-gray-200 flex items-center justify-center text-gray-400 text-xl">No Image</div>
-                )}
-              </Link>
+            <article
+              key={post.id}
+              className="blog-card min-h-[420px] flex flex-col cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => navigate(`/blog/${post.id}`)}
+              tabIndex={0}
+              onKeyPress={e => { if (e.key === 'Enter') navigate(`/blog/${post.id}`); }}
+            >
+              {post.image_url ? (
+                <img
+                  src={post.image_url}
+                  alt={post.title}
+                  className="blog-card-image"
+                />
+              ) : (
+                <div className="blog-card-image bg-gray-200 flex items-center justify-center text-gray-400 text-xl">No Image</div>
+              )}
               <div className="blog-card-content flex flex-col flex-1 justify-between">
                 <div>
                   <div className="mb-3 flex items-center gap-2">
@@ -99,15 +105,14 @@ const Home = () => {
                         key={index}
                         to={`/category/${category.toLowerCase()}`}
                         className="text-xs text-primary-600 mr-2"
+                        onClick={e => e.stopPropagation()}
                       >
                         {category}
                       </Link>
                     ))}
                   </div>
                   <h2 className="blog-card-title mt-2">
-                    <Link to={`/blog/${post.id}`} className="hover:text-primary-600">
-                      {post.title}
-                    </Link>
+                    {post.title}
                   </h2>
                   <p className="blog-card-excerpt text-gray-600">
                     {post.excerpt}
@@ -116,15 +121,12 @@ const Home = () => {
                 <div className="flex flex-row items-end justify-between mt-4 w-full">
                   <div className="flex flex-col items-start">
                     <span className="text-xs text-gray-500 mb-1">{post.read_time || '5 min read'}</span>
-                    <Link
-                      to={`/blog/${post.id}`}
-                      className="inline-flex items-center text-primary-600 hover:text-primary-700"
-                    >
+                    <span className="inline-flex items-center text-primary-600 hover:text-primary-700 cursor-pointer">
                       Read More
                       <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
-                    </Link>
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-full bg-cover bg-center border border-black" style={{ backgroundImage: `url(${eyoabImg})` }}></div>
@@ -135,9 +137,20 @@ const Home = () => {
             </article>
           ))}
         </div>
+        {visibleCount < blogs.length && (
+          <div className="flex justify-center mt-8">
+            <button
+              className="px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors"
+              onClick={() => setVisibleCount(visibleCount + 7)}
+            >
+              See More
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Newsletter Section */}
+      <div className="mt-16 md:mt-24 lg:mt-32"></div>
       <Newsletter />
     </div>
   );
